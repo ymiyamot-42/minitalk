@@ -7,9 +7,15 @@
 void	send_bit(pid_t pid, int bit)
 {
 	if(bit == 0)
+	{
 		kill(pid, SIGUSR1);
+		printf("SIGUSR1\n");
+	}
 	if(bit == 1)
+	{
 		kill(pid, SIGUSR2);
+		printf("SIGUSR2\n");
+	}
 }
 
 void send_char(pid_t pid, char c)
@@ -21,12 +27,15 @@ void send_char(pid_t pid, char c)
 	while(i >= 0)
 	{
 		bit = (c >> i) & 1;
+		printf("%d",bit);
 		send_bit(pid, bit);
 		// pause();
+		usleep(1000);
+		i--;
 	}
 }
 
-void send_str(pid_t pid, char *str)
+void send_str(pid_t pid, const char *str)
 {
 	int i;
 
@@ -34,6 +43,7 @@ void send_str(pid_t pid, char *str)
 	while(str[i])
 	{
 		send_char(pid, str[i]);
+		i++;
 	}
 
 
@@ -55,7 +65,8 @@ int main(int argc, char **argv)
 	pid = atoi(argv[1]);
 	str = argv[2];
 
-
+	send_str(pid, str);
+	// send_char(pid, '\0');
 
 	return 0;
 
